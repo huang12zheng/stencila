@@ -4,9 +4,11 @@ use crate::prelude::*;
 
 
 
-/// * COMMENT: The boolean value true.
+/// https://schema.org/True
+/// * COMMENT:
+/// The boolean value true.
 #[skip_serializing_none]
-#[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
+#[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct True {
     

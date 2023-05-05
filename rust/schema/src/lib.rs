@@ -1,6 +1,5 @@
 mod prelude;
 
-mod traits;
 
 #[rustfmt::skip]
 mod types;

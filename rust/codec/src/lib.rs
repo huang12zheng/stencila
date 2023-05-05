@@ -12,7 +12,6 @@ use common::{
     tracing,
 };
 use format::Format;
-use schema::Node;
 
 // Rexports for the convienience of internal crates implementing `Codec`
 pub use common;

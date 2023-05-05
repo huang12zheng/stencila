@@ -4,9 +4,13 @@ use crate::prelude::*;
 
 
 
-/// * COMMENT: Data type: Floating number. * EXTEND FROM: https://schema.org/Number
+/// https://schema.org/Float
+/// * COMMENT:
+/// Data type: Floating number.
+/// * EXTEND FROM:
+/// https://schema.org/Number
 #[skip_serializing_none]
-#[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
+#[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct Float {
     

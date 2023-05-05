@@ -19,55 +19,65 @@ use crate::schemas::{Items, Schema, Schemas, Type, Value};
 
 /// Modules that should not be generated
 const NO_GENERATE_MODULE: &[&str] = &[
-    "Array",
-    "Boolean",
-    "Integer",
-    "Null",
-    "Number",
-    "Object",
-    "String",
-    "TextValue",
-    "UnsignedInteger",
+    // "Array",
+    // "Boolean",
+    // "Integer",
+    // "Null",
+    // "Number",
+    // "Object",
+    // "String",
+    // "TextValue",
+    // "UnsignedInteger",
 ];
 
-/// Types that should not derive `Read` because there are manual implementations
-const NO_DERIVE_READ: &[&str] = &["Null", "Primitive", "TextValue", "Node"];
+// /// Types that should not derive `Read` because there are manual implementations
+// const NO_DERIVE_READ: &[&str] = &["Null", "Primitive", "TextValue", "Node"];
 
-/// Types that should not derive `Write` because there are manual implementations
-const NO_DERIVE_WRITE: &[&str] = &["Null", "Primitive", "TextValue"];
+// /// Types that should not derive `Write` because there are manual implementations
+// const NO_DERIVE_WRITE: &[&str] = &["Null", "Primitive", "TextValue"];
 
-/// Types that should not derive the `Strip` trait because there are manual implementations
-const NO_DERIVE_STRIP: &[&str] = &[
-    "Call",
-    "CallArgument",
-    "CodeChunk",
-    "CodeExpression",
-    "For",
-    "If",
-    "IfClause",
-    "Include",
-];
+// /// Types that should not derive the `Strip` trait because there are manual implementations
+// const NO_DERIVE_STRIP: &[&str] = &[
+//     "Call",
+//     "CallArgument",
+//     "CodeChunk",
+//     "CodeExpression",
+//     "For",
+//     "If",
+//     "IfClause",
+//     "Include",
+// ];
 
-/// Types that should not derive the `ToHtml` trait because there are manual implementations
-const NO_DERIVE_TO_HTML: &[&str] = &["Paragraph"];
+// /// Types that should not derive the `ToHtml` trait because there are manual implementations
+// const NO_DERIVE_TO_HTML: &[&str] = &["Paragraph"];
 
-/// Properties that need to be boxed to avoid recursive types
-const BOX_PROPERTIES: &[&str] = &[
-    "*.is_part_of",
-    "ArrayValidator.contains",
-    "ArrayValidator.items_validator",
-    "CallArgument.default",
-    "CallArgument.value",
-    "CodeExpression.output",
-    "Comment.parent_item",
-    "ConstantValidator.value",
-    "ImageObject.thumbnail",
-    "ListItem.item",
-    "Organization.logo",
-    "Organization.parent_organization",
-    "Parameter.default",
-    "Parameter.value",
-    "Variable.value",
+// /// Properties that need to be boxed to avoid recursive types
+// const BOX_PROPERTIES: &[&str] = &[
+//     "*.is_part_of",
+//     "ArrayValidator.contains",
+//     "ArrayValidator.items_validator",
+//     "CallArgument.default",
+//     "CallArgument.value",
+//     "CodeExpression.output",
+//     "Comment.parent_item",
+//     "ConstantValidator.value",
+//     "ImageObject.thumbnail",
+//     "ListItem.item",
+//     "Organization.logo",
+//     "Organization.parent_organization",
+//     "Parameter.default",
+//     "Parameter.value",
+//     "Variable.value",
+// ];
+
+static KEYWORDS: [&'static str; 52] = [
+    "as", "break", "const", "continue", "crate", "else", "enum", "extern", "false", "fn", "for",
+    "if", "impl", "in", "let", "loop", "match", "mod", "move", "mut", "pub", "ref", "return",
+    "self", "Self", "static", "struct", "super", "trait", "true", "type", "unsafe", "union", "use",
+    "where", "while", // STRICT, 2018
+    "async", "await", "dyn", // RESERVED, 2015
+    "abstract", "become", "box", "do", "final", "macro", "override", "priv", "typeof", "unsized",
+    "virtual", "yield", "try",
 ];
 
 impl Schemas {
@@ -80,6 +90,7 @@ impl Schemas {
             .canonicalize()
             .context(format!("can not find directory `{}`", dest.display()))?;
         dbg!(&dest);
+        dbg!(self.schemas.len());
         let types = dest.join("types");
         if types.exists() {
             for file in read_dir(&types)?.flatten() {
@@ -103,13 +114,14 @@ impl Schemas {
         } else {
             create_dir_all(&types).await?;
         }
-
+        dbg!(self.schemas.len());
+        // panic!("check node");
         let futures = self
             .schemas
             .values()
             .map(|schema| Self::rust_module(&types, schema));
         try_join_all(futures).await?;
-
+        // panic!("check node");
         let modules = read_dir(&types)
             .context(format!("unable to read directory `{}`", types.display()))?
             .flatten()
@@ -126,15 +138,20 @@ impl Schemas {
             .collect_vec();
 
         let path = dest.join("types.rs");
+        // panic!("check node");
         let modules = modules
             .iter()
             .filter(|module| !module.is_empty())
             .sorted()
-            .map(|module| match module.as_str() {
-                "if" | "for" => format!("r#{module}"),
-                _ => module.to_string(),
+            .map(|module| {
+                if KEYWORDS.contains(&module.as_str()) {
+                    format!("r#{module}")
+                } else {
+                    module.to_string()
+                }
             })
             .collect_vec();
+        // panic!("check node");
         let mods = modules
             .iter()
             .map(|module| format!("mod {module};\n"))
@@ -189,18 +206,18 @@ impl Schemas {
         let mut derive_traits =
             "Debug, Defaults, Clone, PartialEq, Serialize, Deserialize".to_string();
         let title = title.as_str();
-        if !NO_DERIVE_STRIP.contains(&title) {
-            derive_traits += ", Strip";
-        }
-        if !NO_DERIVE_READ.contains(&title) {
-            derive_traits += ", Read";
-        }
-        if !NO_DERIVE_WRITE.contains(&title) {
-            derive_traits += ", Write";
-        }
-        if !NO_DERIVE_TO_HTML.contains(&title) {
-            derive_traits += ", ToHtml";
-        }
+        // if !NO_DERIVE_STRIP.contains(&title) {s
+        //     derive_traits += ", Strip";
+        // }
+        // if !NO_DERIVE_READ.contains(&title) {
+        //     derive_traits += ", Read";
+        // }
+        // if !NO_DERIVE_WRITE.contains(&title) {
+        //     derive_traits += ", Write";
+        // }
+        // if !NO_DERIVE_TO_HTML.contains(&title) {
+        //     derive_traits += ", ToHtml";
+        // }
 
         let mut fields = Vec::new();
         let mut used_types = HashSet::new();
@@ -211,9 +228,10 @@ impl Schemas {
 
             // Rewrite name as necessary for Rust compatibility
             let name = name.to_snake_case();
-            let name = match name.as_str() {
-                "type" => "r#type".to_string(),
-                _ => name,
+            let name = if KEYWORDS.contains(&name.as_str()) {
+                format!("r#{name}")
+            } else {
+                name.to_string()
             };
 
             // Determine Rust type for the property
@@ -241,12 +259,12 @@ impl Schemas {
                 typ = format!("Vec<{typ}>");
             };
 
-            if BOX_PROPERTIES.contains(&format!("{title}.{name}").as_str())
-                || BOX_PROPERTIES.contains(&format!("*.{name}").as_str())
-            {
-                typ = format!("Box<{typ}>");
-                default = default.map(|default| format!("Box::new({default})"));
-            }
+            // if BOX_PROPERTIES.contains(&format!("{title}.{name}").as_str())
+            //     || BOX_PROPERTIES.contains(&format!("*.{name}").as_str())
+            // {
+            //     typ = format!("Box<{typ}>");
+            //     default = default.map(|default| format!("Box::new({default})"));
+            // }
 
             if !property.is_required {
                 typ = format!("Option<{typ}>");
@@ -273,9 +291,10 @@ impl Schemas {
             .sorted()
             .map(|used_type| {
                 let module = used_type.to_snake_case();
-                let module = match module.as_str() {
-                    "if" | "for" => format!("r#{module}"),
-                    _ => module,
+                let module = if KEYWORDS.contains(&module.as_str()) {
+                    format!("r#{module}")
+                } else {
+                    module.to_string()
                 };
                 format!("use super::{module}::{used_type};")
             })
@@ -453,12 +472,18 @@ pub struct {title} {{
             .title
             .clone()
             .unwrap_or_else(|| alternatives.join("Or"));
+        let name = if KEYWORDS.contains(&name.as_str()) {
+            format!("r#{name}")
+        } else {
+            name
+        };
 
         let path = dest.join(format!("{}.rs", name.to_snake_case()));
         if path.exists() {
             return Ok(name);
         }
 
+        let url = schema.id.clone().unwrap_or(format!(""));
         let description = if let Some(title) = &schema.title {
             schema.description.clone().unwrap_or(title.clone())
         } else {
@@ -478,9 +503,10 @@ pub struct {title} {{
             .sorted()
             .filter_map(|(name, is_type)| {
                 let module = name.to_snake_case();
-                let module = match module.as_str() {
-                    "if" | "for" => format!("r#{module}"),
-                    _ => module,
+                let module = if KEYWORDS.contains(&module.as_str()) {
+                    format!("r#{module}")
+                } else {
+                    module.to_string()
                 };
                 is_type.then_some(format!("use super::{module}::{name};",))
             })
@@ -520,18 +546,18 @@ pub struct {title} {{
         if !default.is_empty() {
             derive_traits += ", Defaults";
         };
-        if !NO_DERIVE_STRIP.contains(&title) {
-            derive_traits += ", Strip";
-        }
-        if !NO_DERIVE_READ.contains(&title) {
-            derive_traits += ", Read";
-        }
-        if !NO_DERIVE_WRITE.contains(&title) {
-            derive_traits += ", Write";
-        }
-        if !NO_DERIVE_TO_HTML.contains(&title) {
-            derive_traits += ", ToHtml";
-        }
+        // if !NO_DERIVE_STRIP.contains(&title) {
+        //     derive_traits += ", Strip";
+        // }
+        // if !NO_DERIVE_READ.contains(&title) {
+        //     derive_traits += ", Read";
+        // }
+        // if !NO_DERIVE_WRITE.contains(&title) {
+        //     derive_traits += ", Write";
+        // }
+        // if !NO_DERIVE_TO_HTML.contains(&title) {
+        //     derive_traits += ", ToHtml";
+        // }
 
         let serde_tagged = match unit_variants {
             false => "untagged, ",
@@ -541,10 +567,13 @@ pub struct {title} {{
         let rust = format!(
             r#"use crate::prelude::*;
 
-{uses}/// {description}
+{uses}
+/// {url}
+/// {description}
 #[derive({derive_traits})]
 #[serde({serde_tagged}crate = "common::serde")]
 {default}
+#[allow(non_camel_case_types)]
 pub enum {name} {{
     {variants}
 }}

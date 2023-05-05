@@ -2,36 +2,31 @@
 
 use crate::prelude::*;
 
+use super::in_language_prop_enum::InLanguagePropEnum;
 use super::text::Text;
-use super::in_language::inLanguage;
 
-/// * MOD OF: https://pending.schema.org * COMMENT: Data type: PronounceableText. * EXTEND FROM: https://schema.org/Text
+/// https://schema.org/PronounceableText
+/// * MOD OF:
+/// https://pending.schema.org
+/// * COMMENT:
+/// Data type: PronounceableText.
+/// * EXTEND FROM:
+/// https://schema.org/Text
 #[skip_serializing_none]
-#[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
+#[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct PronounceableText {
-    
-
-    /// Non-core optional fields
-    #[serde(flatten)]
-    pub options: Box<PronounceableTextOptions>,
-}
-
-#[skip_serializing_none]
-#[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
-#[serde(rename_all = "camelCase", crate = "common::serde")]
-pub struct PronounceableTextOptions {
     /// The language of the content or performance or used in an action. Please use one of the language codes from the <a href="http://tools.ietf.org/html/bcp47">IETF BCP 47 standard</a>. See also <a class="localLink" href="/availableLanguage">availableLanguage</a>.
-    pub in_language: Option<inLanguage>,
+    pub in_language_prop_enum: Option<InLanguagePropEnum>,
 
     /// Representation of a text <a class="localLink" href="/textValue">textValue</a> using the specified <a class="localLink" href="/speechToTextMarkup">speechToTextMarkup</a>. For example the city name of Houston in IPA: /ˈhjuːstən/.
-    pub phonetic_text: Option<Text>,
+    pub phonetic_text_prop_enum: Option<Text>,
 
     /// Form of markup used. eg. <a href="https://www.w3.org/TR/speech-synthesis11">SSML</a> or <a href="https://www.wikidata.org/wiki/Property:P898">IPA</a>.
-    pub speech_to_text_markup: Option<Text>,
+    pub speech_to_text_markup_prop_enum: Option<Text>,
 
     /// Text value being annotated.
-    pub text_value: Option<Text>,
+    pub text_value_prop_enum: Option<Text>,
 }
 
 impl PronounceableText {

@@ -221,7 +221,9 @@ impl Schema {
         let Some(description) = &mut self.description else {
             bail!("schema does not have a description")
         };
-        *description = description.replace('\n', " ").trim().to_string();
+        if is_prop {
+            *description = description.replace('\n', " ").trim().to_string();
+        }
 
         if let Some(properties) = &mut self.properties {
             for (name, property) in properties.iter_mut() {
@@ -353,16 +355,16 @@ impl Schemas {
         // first (for fast deserialization for kernel outputs) excecpt for `Object` which is
         // last so it does not "consume" entity types (which are also objects).
         let mut any_of = [
-            "Null",
-            "Boolean",
-            "Integer",
-            "UnsignedInteger",
-            "Number",
-            "String",
-            "Array",
+            // "Null",
+            // "Boolean",
+            // "Integer",
+            // "UnsignedInteger",
+            // "Number",
+            // "String",
+            // "Array",
         ]
         .iter()
-        .map(|name| Schema {
+        .map(|name: &&str| Schema {
             r#ref: Some(name.to_string()),
             ..Default::default()
         })
@@ -382,71 +384,71 @@ impl Schemas {
         entities.sort_by(|a, b| a.r#ref.cmp(&b.r#ref));
         any_of.append(&mut entities);
 
-        any_of.push(Schema {
-            r#ref: Some("Object".to_string()),
-            ..Default::default()
-        });
+        // any_of.push(Schema {
+        //     r#ref: Some("Object".to_string()),
+        //     ..Default::default()
+        // });
 
-        let title = "Node".to_string();
-        self.schemas.insert(
-            title.clone(),
-            Schema {
-                title: Some(title),
-                description: Some(
-                    "Union type for all types in this schema, including primitives and entities"
-                        .to_string(),
-                ),
-                any_of: Some(any_of),
-                ..Default::default()
-            },
-        );
+        // let title = "Node".to_string();
+        // self.schemas.insert(
+        //     title.clone(),
+        //     Schema {
+        //         title: Some(title),
+        //         description: Some(
+        //             "Union type for all types in this schema, including primitives and entities"
+        //                 .to_string(),
+        //         ),
+        //         any_of: Some(any_of),
+        //         ..Default::default()
+        //     },
+        // );
 
         // Union types for descendants of...
-        for base in ["Thing", "CreativeWork"] {
-            let mut any_of = Vec::new();
-            for (name, schema) in &self.schemas {
-                fn is_descendent(
-                    schemas: &IndexMap<String, Schema>,
-                    base: &str,
-                    nest: &Schema,
-                ) -> bool {
-                    if nest
-                        .extends
-                        .as_ref()
-                        .unwrap_or(&vec![])
-                        .contains(&base.to_string())
-                    {
-                        return true;
-                    }
-                    nest.extends
-                        .as_ref()
-                        .unwrap_or(&vec![])
-                        .iter()
-                        .any(|extend| is_descendent(schemas, base, &schemas[extend]))
-                }
+        // for base in ["Thing", "CreativeWork"] {
+        //     let mut any_of = Vec::new();
+        //     for (name, schema) in &self.schemas {
+        //         fn is_descendent(
+        //             schemas: &IndexMap<String, Schema>,
+        //             base: &str,
+        //             nest: &Schema,
+        //         ) -> bool {
+        //             if nest
+        //                 .extends
+        //                 .as_ref()
+        //                 .unwrap_or(&vec![])
+        //                 .contains(&base.to_string())
+        //             {
+        //                 return true;
+        //             }
+        //             nest.extends
+        //                 .as_ref()
+        //                 .unwrap_or(&vec![])
+        //                 .iter()
+        //                 .any(|extend| is_descendent(schemas, base, &schemas[extend]))
+        //         }
 
-                if is_descendent(&self.schemas, base, schema) {
-                    any_of.push(Schema {
-                        r#ref: Some(name.to_string()),
-                        ..Default::default()
-                    });
-                }
-            }
-            any_of.sort_by(|a, b| a.r#ref.cmp(&b.r#ref));
+        //         if is_descendent(&self.schemas, base, schema) {
+        //             any_of.push(Schema {
+        //                 r#ref: Some(name.to_string()),
+        //                 ..Default::default()
+        //             });
+        //         }
+        //     }
+        //     any_of.sort_by(|a, b| a.r#ref.cmp(&b.r#ref));
 
-            let title = format!("{base}Type");
-            self.schemas.insert(
-                title.clone(),
-                Schema {
-                    title: Some(title),
-                    description: Some(format!(
-                        "Union type for all types that are descended from `{base}`"
-                    )),
-                    any_of: Some(any_of),
-                    ..Default::default()
-                },
-            );
-        }
+        //     let title = format!("{base}Type");
+        //     self.schemas.insert(
+        //         title.clone(),
+        //         Schema {
+        //             title: Some(title),
+        //             description: Some(format!(
+        //                 "Union type for all types that are descended from `{base}`"
+        //             )),
+        //             any_of: Some(any_of),
+        //             ..Default::default()
+        //         },
+        //     );
+        // }
 
         Ok(())
     }

@@ -1,35 +1,27 @@
-// Generated file. Do not edit; see `schema-gen` crate.
-
 use crate::prelude::*;
 
-use super::integer::Integer;
-use super::string::String;
-use super::time_unit::TimeUnit;
+use super::audiobook::Audiobook;
+use super::episode::Episode;
+use super::event::Event;
+use super::media_object::MediaObject;
+use super::movie::Movie;
+use super::music_recording::MusicRecording;
+use super::music_release::MusicRelease;
+use super::quantitative_value_distribution::QuantitativeValueDistribution;
+use super::schedule::Schedule;
 
-/// A value that represents the difference between two timestamps
-#[skip_serializing_none]
-#[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
-#[serde(rename_all = "camelCase", crate = "common::serde")]
-pub struct Duration {
-    /// The type of this item
-    pub r#type: MustBe!("Duration"),
+/// The duration of the item (movie, audio recording, event, etc.) in <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601 date format</a>.
+#[derive(Debug, Clone, PartialEq, Display, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
+#[serde(untagged, crate = "common::serde")]
 
-    /// The identifier for this item
-    pub id: Option<String>,
-
-    /// The time difference in `timeUnit`s.
-    pub value: Integer,
-
-    /// The time unit that the `value` represents.
-    pub time_unit: TimeUnit,
-}
-
-impl Duration {
-    pub fn new(value: Integer, time_unit: TimeUnit) -> Self {
-        Self {
-            value,
-            time_unit,
-            ..Default::default()
-        }
-    }
+pub enum duration {
+    Audiobook(Audiobook),
+    Episode(Episode),
+    Event(Event),
+    MediaObject(MediaObject),
+    Movie(Movie),
+    MusicRecording(MusicRecording),
+    MusicRelease(MusicRelease),
+    QuantitativeValueDistribution(QuantitativeValueDistribution),
+    Schedule(Schedule),
 }

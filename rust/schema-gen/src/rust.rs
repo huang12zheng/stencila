@@ -79,7 +79,7 @@ impl Schemas {
         let dest = dest
             .canonicalize()
             .context(format!("can not find directory `{}`", dest.display()))?;
-
+        dbg!(&dest);
         let types = dest.join("types");
         if types.exists() {
             for file in read_dir(&types)?.flatten() {

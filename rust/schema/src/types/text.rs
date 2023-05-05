@@ -2,29 +2,20 @@
 
 use crate::prelude::*;
 
-use super::string::String;
-use super::text_value::TextValue;
 
-/// Textual content
+
+/// * COMMENT: Data type: Text. * LOOK ALSO: https://schema.org/CssSelectorType, https://schema.org/PronounceableText, https://schema.org/URL, https://schema.org/XPathType
 #[skip_serializing_none]
 #[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct Text {
-    /// The type of this item
-    pub r#type: MustBe!("Text"),
-
-    /// The identifier for this item
-    pub id: Option<String>,
-
-    /// The value of the text content
-    pub value: TextValue,
+    
 }
 
 impl Text {
-    pub fn new(value: TextValue) -> Self {
+    pub fn new() -> Self {
         Self {
-            value,
-            ..Default::default()
+            
         }
     }
 }

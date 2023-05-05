@@ -2,28 +2,20 @@
 
 use crate::prelude::*;
 
-use super::string::String;
 
-/// A point in time recurring on multiple days
+
+/// * COMMENT: A point in time recurring on multiple days in the form hh:mm:ss[Z|(+|-)hh:mm] (see <a href="http://www.w3.org/TR/xmlschema-2/#time">XML schema for details</a>).
 #[skip_serializing_none]
 #[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct Time {
-    /// The type of this item
-    pub r#type: MustBe!("Time"),
-
-    /// The identifier for this item
-    pub id: Option<String>,
-
-    /// The time of day as a string in format `hh:mm:ss[Z|(+|-)hh:mm]`.
-    pub value: String,
+    
 }
 
 impl Time {
-    pub fn new(value: String) -> Self {
+    pub fn new() -> Self {
         Self {
-            value,
-            ..Default::default()
+            
         }
     }
 }

@@ -2,33 +2,45 @@
 
 use crate::prelude::*;
 
-use super::block::Block;
-use super::image_object_or_string::ImageObjectOrString;
-use super::organization::Organization;
-use super::organization_or_person::OrganizationOrPerson;
-use super::postal_address_or_string::PostalAddressOrString;
-use super::property_value_or_string::PropertyValueOrString;
-use super::string::String;
+use super::thing::Thing;
+use super::address::address;
+use super::award::award;
+use super::brand::brand;
+use super::call_sign::callSign;
+use super::contact_point::contactPoint;
+use super::duns::duns;
+use super::email::email;
+use super::fax_number::faxNumber;
+use super::funder::funder;
+use super::funding::funding;
+use super::gender::gender;
+use super::global_location_number::globalLocationNumber;
+use super::has_credential::hasCredential;
+use super::has_offer_catalog::hasOfferCatalog;
+use super::has_pos::hasPOS;
+use super::height::height;
+use super::interaction_statistic::interactionStatistic;
+use super::isic_v4::isicV4;
+use super::knows_about::knowsAbout;
+use super::knows_language::knowsLanguage;
+use super::makes_offer::makesOffer;
+use super::member_of::memberOf;
+use super::naics::naics;
+use super::owns::owns;
+use super::publishing_principles::publishingPrinciples;
+use super::seeks::seeks;
+use super::sponsor::sponsor;
+use super::tax_id::taxID;
+use super::telephone::telephone;
+use super::vat_id::vatID;
+use super::weight::weight;
 
-/// A person (alive, dead, undead, or fictional).
+/// * COMMENT: A person (alive, dead, undead, or fictional). * EXTEND FROM: https://schema.org/Thing * LOOK ALSO: https://schema.org/Patient
 #[skip_serializing_none]
 #[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct Person {
-    /// The type of this item
-    pub r#type: MustBe!("Person"),
-
-    /// The identifier for this item
-    pub id: Option<String>,
-
-    /// Organizations that the person is affiliated with.
-    pub affiliations: Option<Vec<Organization>>,
-
-    /// Family name. In the U.S., the last name of a person.
-    pub family_names: Option<Vec<String>>,
-
-    /// Given name. In the U.S., the first name of a person.
-    pub given_names: Option<Vec<String>>,
+    
 
     /// Non-core optional fields
     #[serde(flatten)]
@@ -39,47 +51,215 @@ pub struct Person {
 #[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct PersonOptions {
-    /// Alternate names (aliases) for the item.
-    pub alternate_names: Option<Vec<String>>,
+    /// An additional type for the item, typically used for adding more specific types from external vocabularies in microdata syntax. This is a relationship between something and a class that the thing is in. In RDFa syntax, it is better to use the native RDFa syntax - the 'typeof' attribute - for multiple types. Schema.org tools may have only weaker understanding of extra types, in particular those defined externally.
+    pub additional_type: Option<Thing>,
+
+    /// An alias for the item.
+    pub alternate_name: Option<Thing>,
 
     /// A description of the item.
-    pub description: Option<Vec<Block>>,
+    pub description: Option<Thing>,
 
-    /// Any kind of identifier for any kind of Thing.
-    pub identifiers: Option<Vec<PropertyValueOrString>>,
+    /// A sub property of description. A short description of the item used to disambiguate from other, similar items. Information from other properties (in particular, name) may be necessary for the description to be useful for disambiguation.
+    pub disambiguating_description: Option<Thing>,
 
-    /// Images of the item.
-    pub images: Option<Vec<ImageObjectOrString>>,
+    /// The identifier property represents any kind of identifier for any kind of <a class="localLink" href="/Thing">Thing</a>, such as ISBNs, GTIN codes, UUIDs etc. Schema.org provides dedicated properties for representing many of these, either as textual strings or as URL (URI) links. See <a href="/docs/datamodel.html#identifierBg">background notes</a> for more details.
+    pub identifier: Option<Thing>,
+
+    /// An image of the item. This can be a <a class="localLink" href="/URL">URL</a> or a fully described <a class="localLink" href="/ImageObject">ImageObject</a>.
+    pub image: Option<Thing>,
+
+    /// Indicates a page (or other CreativeWork) for which this thing is the main entity being described. See <a href="/docs/datamodel.html#mainEntityBackground">background notes</a> for details.
+    pub main_entity_of_page: Option<Thing>,
 
     /// The name of the item.
-    pub name: Option<String>,
+    pub name: Option<Thing>,
 
-    /// The URL of the item.
-    pub url: Option<String>,
+    /// Indicates a potential Action, which describes an idealized action in which this thing would play an 'object' role.
+    pub potential_action: Option<Thing>,
 
-    /// Postal address for the person.
-    pub address: Option<PostalAddressOrString>,
+    /// URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Wikidata entry, or official website.
+    pub same_as: Option<Thing>,
 
-    /// Email addresses for the person.
-    pub emails: Option<Vec<String>>,
+    /// A CreativeWork or Event about this Thing.
+    pub subject_of: Option<Thing>,
+
+    /// URL of the item.
+    pub url: Option<Thing>,
+
+    /// An additional name for a Person, can be used for a middle name.
+    pub additional_name: Option<Person>,
+
+    /// Physical address of the item.
+    pub address: Option<address>,
+
+    /// An organization that this person is affiliated with. For example, a school/university, a club, or a team.
+    pub affiliation: Option<Person>,
+
+    /// An organization that the person is an alumni of.
+    pub alumni_of: Option<Person>,
+
+    /// An award won by or for this item.
+    pub award: Option<award>,
+
+    /// Date of birth.
+    pub birth_date: Option<Person>,
+
+    /// The place where the person was born.
+    pub birth_place: Option<Person>,
+
+    /// The brand(s) associated with a product or service, or the brand(s) maintained by an organization or business person.
+    pub brand: Option<brand>,
+
+    /// A <a href="https://en.wikipedia.org/wiki/Call_sign">callsign</a>, as used in broadcasting and radio communications to identify people, radio and TV stations, or vehicles.
+    pub call_sign: Option<callSign>,
+
+    /// A child of the person.
+    pub children: Option<Person>,
+
+    /// A colleague of the person.
+    pub colleague: Option<Person>,
+
+    /// A contact point for a person or organization.
+    pub contact_point: Option<contactPoint>,
+
+    /// Date of death.
+    pub death_date: Option<Person>,
+
+    /// The place where the person died.
+    pub death_place: Option<Person>,
+
+    /// The Dun &amp; Bradstreet DUNS number for identifying an organization or business person.
+    pub duns: Option<duns>,
+
+    /// Email address.
+    pub email: Option<email>,
+
+    /// Family name. In the U.S., the last name of a Person.
+    pub family_name: Option<Person>,
+
+    /// The fax number.
+    pub fax_number: Option<faxNumber>,
+
+    /// The most generic uni-directional social relation.
+    pub follows: Option<Person>,
 
     /// A person or organization that supports (sponsors) something through some kind of financial contribution.
-    pub funders: Option<Vec<OrganizationOrPerson>>,
+    pub funder: Option<funder>,
 
-    /// An honorific prefix preceding a person's name such as Dr/Mrs/Mr.
-    pub honorific_prefix: Option<String>,
+    /// A <a class="localLink" href="/Grant">Grant</a> that directly or indirectly provide funding or sponsorship for this item. See also <a class="localLink" href="/ownershipFundingInfo">ownershipFundingInfo</a>.
+    pub funding: Option<funding>,
 
-    /// An honorific suffix after a person's name such as MD/PhD/MSCSW.
-    pub honorific_suffix: Option<String>,
+    /// Gender of something, typically a <a class="localLink" href="/Person">Person</a>, but possibly also fictional characters, animals, etc. While http://schema.org/Male and http://schema.org/Female may be used, text strings are also acceptable for people who do not identify as a binary gender. The <a class="localLink" href="/gender">gender</a> property can also be used in an extended sense to cover e.g. the gender of sports teams. As with the gender of individuals, we do not try to enumerate all possibilities. A mixed-gender <a class="localLink" href="/SportsTeam">SportsTeam</a> can be indicated with a text value of "Mixed".
+    pub gender: Option<gender>,
+
+    /// Given name. In the U.S., the first name of a Person.
+    pub given_name: Option<Person>,
+
+    /// The <a href="http://www.gs1.org/gln">Global Location Number</a> (GLN, sometimes also referred to as International Location Number or ILN) of the respective organization, person, or place. The GLN is a 13-digit number used to identify parties and physical locations.
+    pub global_location_number: Option<globalLocationNumber>,
+
+    /// A credential awarded to the Person or Organization.
+    pub has_credential: Option<hasCredential>,
+
+    /// The Person's occupation. For past professions, use Role for expressing dates.
+    pub has_occupation: Option<Person>,
+
+    /// Indicates an OfferCatalog listing for this Organization, Person, or Service.
+    pub has_offer_catalog: Option<hasOfferCatalog>,
+
+    /// Points-of-Sales operated by the organization or person.
+    pub has_pos: Option<hasPOS>,
+
+    /// The height of the item.
+    pub height: Option<height>,
+
+    /// A contact location for a person's residence.
+    pub home_location: Option<Person>,
+
+    /// An honorific prefix preceding a Person's name such as Dr/Mrs/Mr.
+    pub honorific_prefix: Option<Person>,
+
+    /// An honorific suffix following a Person's name such as M.D./PhD/MSCSW.
+    pub honorific_suffix: Option<Person>,
+
+    /// The number of interactions for the CreativeWork using the WebSite or SoftwareApplication. The most specific child type of InteractionCounter should be used.
+    pub interaction_statistic: Option<interactionStatistic>,
+
+    /// The International Standard of Industrial Classification of All Economic Activities (ISIC), Revision 4 code for a particular organization, business person, or place.
+    pub isic_v4: Option<isicV4>,
 
     /// The job title of the person (for example, Financial Manager).
-    pub job_title: Option<String>,
+    pub job_title: Option<Person>,
 
-    /// An organization (or program membership) to which this person belongs.
-    pub member_of: Option<Vec<Organization>>,
+    /// The most generic bi-directional social/work relation.
+    pub knows: Option<Person>,
 
-    /// Telephone numbers for the person.
-    pub telephone_numbers: Option<Vec<String>>,
+    /// Of a <a class="localLink" href="/Person">Person</a>, and less typically of an <a class="localLink" href="/Organization">Organization</a>, to indicate a topic that is known about - suggesting possible expertise but not implying it. We do not distinguish skill levels here, or relate this to educational content, events, objectives or <a class="localLink" href="/JobPosting">JobPosting</a> descriptions.
+    pub knows_about: Option<knowsAbout>,
+
+    /// Of a <a class="localLink" href="/Person">Person</a>, and less typically of an <a class="localLink" href="/Organization">Organization</a>, to indicate a known language. We do not distinguish skill levels or reading/writing/speaking/signing here. Use language codes from the <a href="http://tools.ietf.org/html/bcp47">IETF BCP 47 standard</a>.
+    pub knows_language: Option<knowsLanguage>,
+
+    /// A pointer to products or services offered by the organization or person.
+    pub makes_offer: Option<makesOffer>,
+
+    /// An Organization (or ProgramMembership) to which this Person or Organization belongs.
+    pub member_of: Option<memberOf>,
+
+    /// The North American Industry Classification System (NAICS) code for a particular organization or business person.
+    pub naics: Option<naics>,
+
+    /// Nationality of the person.
+    pub nationality: Option<Person>,
+
+    /// The total financial value of the person as calculated by subtracting assets from liabilities.
+    pub net_worth: Option<Person>,
+
+    /// Products owned by the organization or person.
+    pub owns: Option<owns>,
+
+    /// A parent of this person.
+    pub parent: Option<Person>,
+
+    /// Event that this person is a performer or participant in.
+    pub performer_in: Option<Person>,
+
+    /// The publishingPrinciples property indicates (typically via <a class="localLink" href="/URL">URL</a>) a document describing the editorial principles of an <a class="localLink" href="/Organization">Organization</a> (or individual, e.g. a <a class="localLink" href="/Person">Person</a> writing a blog) that relate to their activities as a publisher, e.g. ethics or diversity policies. When applied to a <a class="localLink" href="/CreativeWork">CreativeWork</a> (e.g. <a class="localLink" href="/NewsArticle">NewsArticle</a>) the principles are those of the party primarily responsible for the creation of the <a class="localLink" href="/CreativeWork">CreativeWork</a>.<br/><br/>  While such policies are most typically expressed in natural language, sometimes related information (e.g. indicating a <a class="localLink" href="/funder">funder</a>) can be expressed using schema.org terminology.
+    pub publishing_principles: Option<publishingPrinciples>,
+
+    /// The most generic familial relation.
+    pub related_to: Option<Person>,
+
+    /// A pointer to products or services sought by the organization or person (demand).
+    pub seeks: Option<seeks>,
+
+    /// A sibling of the person.
+    pub sibling: Option<Person>,
+
+    /// A person or organization that supports a thing through a pledge, promise, or financial contribution. E.g. a sponsor of a Medical Study or a corporate sponsor of an event.
+    pub sponsor: Option<sponsor>,
+
+    /// The person's spouse.
+    pub spouse: Option<Person>,
+
+    /// The Tax / Fiscal ID of the organization or person, e.g. the TIN in the US or the CIF/NIF in Spain.
+    pub tax_id: Option<taxID>,
+
+    /// The telephone number.
+    pub telephone: Option<telephone>,
+
+    /// The Value-added Tax ID of the organization or person.
+    pub vat_id: Option<vatID>,
+
+    /// The weight of the product or person.
+    pub weight: Option<weight>,
+
+    /// A contact location for a person's place of work.
+    pub work_location: Option<Person>,
+
+    /// Organizations that the person works for.
+    pub works_for: Option<Person>,
 }
 
 impl Person {

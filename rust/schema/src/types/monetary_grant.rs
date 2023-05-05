@@ -2,24 +2,18 @@
 
 use crate::prelude::*;
 
-use super::block::Block;
-use super::image_object_or_string::ImageObjectOrString;
-use super::number::Number;
-use super::person_or_organization::PersonOrOrganization;
-use super::property_value_or_string::PropertyValueOrString;
-use super::string::String;
+use super::grant::Grant;
 use super::thing::Thing;
+use super::amount::amount;
+use super::funder::funder;
+use super::sponsor::sponsor;
 
-/// A monetary grant.
+/// * MOD OF: https://pending.schema.org * COMMENT: A monetary grant. * EXTEND FROM: https://schema.org/Grant
 #[skip_serializing_none]
 #[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct MonetaryGrant {
-    /// The type of this item
-    pub r#type: MustBe!("MonetaryGrant"),
-
-    /// The identifier for this item
-    pub id: Option<String>,
+    
 
     /// Non-core optional fields
     #[serde(flatten)]
@@ -30,35 +24,53 @@ pub struct MonetaryGrant {
 #[derive(Debug, Defaults, Clone, PartialEq, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct MonetaryGrantOptions {
-    /// Alternate names (aliases) for the item.
-    pub alternate_names: Option<Vec<String>>,
+    /// An additional type for the item, typically used for adding more specific types from external vocabularies in microdata syntax. This is a relationship between something and a class that the thing is in. In RDFa syntax, it is better to use the native RDFa syntax - the 'typeof' attribute - for multiple types. Schema.org tools may have only weaker understanding of extra types, in particular those defined externally.
+    pub additional_type: Option<Thing>,
+
+    /// An alias for the item.
+    pub alternate_name: Option<Thing>,
 
     /// A description of the item.
-    pub description: Option<Vec<Block>>,
+    pub description: Option<Thing>,
 
-    /// Any kind of identifier for any kind of Thing.
-    pub identifiers: Option<Vec<PropertyValueOrString>>,
+    /// A sub property of description. A short description of the item used to disambiguate from other, similar items. Information from other properties (in particular, name) may be necessary for the description to be useful for disambiguation.
+    pub disambiguating_description: Option<Thing>,
 
-    /// Images of the item.
-    pub images: Option<Vec<ImageObjectOrString>>,
+    /// The identifier property represents any kind of identifier for any kind of <a class="localLink" href="/Thing">Thing</a>, such as ISBNs, GTIN codes, UUIDs etc. Schema.org provides dedicated properties for representing many of these, either as textual strings or as URL (URI) links. See <a href="/docs/datamodel.html#identifierBg">background notes</a> for more details.
+    pub identifier: Option<Thing>,
+
+    /// An image of the item. This can be a <a class="localLink" href="/URL">URL</a> or a fully described <a class="localLink" href="/ImageObject">ImageObject</a>.
+    pub image: Option<Thing>,
+
+    /// Indicates a page (or other CreativeWork) for which this thing is the main entity being described. See <a href="/docs/datamodel.html#mainEntityBackground">background notes</a> for details.
+    pub main_entity_of_page: Option<Thing>,
 
     /// The name of the item.
-    pub name: Option<String>,
+    pub name: Option<Thing>,
 
-    /// The URL of the item.
-    pub url: Option<String>,
+    /// Indicates a potential Action, which describes an idealized action in which this thing would play an 'object' role.
+    pub potential_action: Option<Thing>,
 
-    /// Indicates an item funded or sponsored through a Grant.
-    pub funded_items: Option<Vec<Thing>>,
+    /// URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Wikidata entry, or official website.
+    pub same_as: Option<Thing>,
 
-    /// A person or organization that supports a thing through a pledge, promise, or financial contribution.
-    pub sponsors: Option<Vec<PersonOrOrganization>>,
+    /// A CreativeWork or Event about this Thing.
+    pub subject_of: Option<Thing>,
 
-    /// The amount of money.
-    pub amounts: Option<Number>,
+    /// URL of the item.
+    pub url: Option<Thing>,
+
+    /// Indicates something directly or indirectly funded or sponsored through a <a class="localLink" href="/Grant">Grant</a>. See also <a class="localLink" href="/ownershipFundingInfo">ownershipFundingInfo</a>.
+    pub funded_item: Option<Grant>,
 
     /// A person or organization that supports (sponsors) something through some kind of financial contribution.
-    pub funders: Option<Vec<PersonOrOrganization>>,
+    pub funder: Option<funder>,
+
+    /// A person or organization that supports a thing through a pledge, promise, or financial contribution. E.g. a sponsor of a Medical Study or a corporate sponsor of an event.
+    pub sponsor: Option<sponsor>,
+
+    /// The amount of money.
+    pub amount: Option<amount>,
 }
 
 impl MonetaryGrant {

@@ -1,7 +1,7 @@
 use crate::prelude::*;
 
 use super::organization::Organization;
-use super::person::Person;
+use super::program_membership::ProgramMembership;
 
 /// An Organization (or ProgramMembership) to which this Person or Organization belongs.
 #[derive(Debug, Clone, PartialEq, Display, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
@@ -9,5 +9,5 @@ use super::person::Person;
 
 pub enum memberOf {
     Organization(Organization),
-    Person(Person),
+    ProgramMembership(ProgramMembership),
 }

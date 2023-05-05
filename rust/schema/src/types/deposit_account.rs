@@ -2,28 +2,37 @@
 
 use crate::prelude::*;
 
-use super::bank_account::BankAccount;
-use super::financial_product::FinancialProduct;
-use super::service::Service;
+use super::action::Action;
+use super::aggregate_rating::AggregateRating;
+use super::audience::Audience;
+use super::monetary_amount::MonetaryAmount;
+use super::offer_catalog::OfferCatalog;
+use super::opening_hours_specification::OpeningHoursSpecification;
+use super::review::Review;
+use super::service_channel::ServiceChannel;
+use super::text::Text;
 use super::thing::Thing;
-use super::aggregate_rating::aggregateRating;
+use super::url::URL;
 use super::amount::amount;
+use super::annual_percentage_rate::annualPercentageRate;
 use super::area_served::areaServed;
-use super::audience::audience;
-use super::award::award;
+use super::bank_account_type::bankAccountType;
 use super::brand::brand;
 use super::broker::broker;
 use super::category::category;
 use super::fees_and_commissions_specification::feesAndCommissionsSpecification;
-use super::has_offer_catalog::hasOfferCatalog;
-use super::hours_available::hoursAvailable;
+use super::identifier::identifier;
+use super::image::image;
+use super::interest_rate::interestRate;
 use super::is_related_to::isRelatedTo;
 use super::is_similar_to::isSimilarTo;
 use super::logo::logo;
+use super::main_entity_of_page::mainEntityOfPage;
 use super::offers::offers;
 use super::provider::provider;
-use super::review::review;
-use super::slogan::slogan;
+use super::service_type::serviceType;
+use super::subject_of::subjectOf;
+use super::terms_of_service::termsOfService;
 
 /// * COMMENT: A type of Bank Account with a main purpose of depositing funds to gain interest or other benefits. * EXTEND FROM: https://schema.org/BankAccount, https://schema.org/InvestmentOrDeposit
 #[skip_serializing_none]
@@ -42,55 +51,55 @@ pub struct DepositAccount {
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct DepositAccountOptions {
     /// An additional type for the item, typically used for adding more specific types from external vocabularies in microdata syntax. This is a relationship between something and a class that the thing is in. In RDFa syntax, it is better to use the native RDFa syntax - the 'typeof' attribute - for multiple types. Schema.org tools may have only weaker understanding of extra types, in particular those defined externally.
-    pub additional_type: Option<Thing>,
+    pub additional_type: Option<URL>,
 
     /// An alias for the item.
-    pub alternate_name: Option<Thing>,
+    pub alternate_name: Option<Text>,
 
     /// A description of the item.
-    pub description: Option<Thing>,
+    pub description: Option<Text>,
 
     /// A sub property of description. A short description of the item used to disambiguate from other, similar items. Information from other properties (in particular, name) may be necessary for the description to be useful for disambiguation.
-    pub disambiguating_description: Option<Thing>,
+    pub disambiguating_description: Option<Text>,
 
     /// The identifier property represents any kind of identifier for any kind of <a class="localLink" href="/Thing">Thing</a>, such as ISBNs, GTIN codes, UUIDs etc. Schema.org provides dedicated properties for representing many of these, either as textual strings or as URL (URI) links. See <a href="/docs/datamodel.html#identifierBg">background notes</a> for more details.
-    pub identifier: Option<Thing>,
+    pub identifier: Option<identifier>,
 
     /// An image of the item. This can be a <a class="localLink" href="/URL">URL</a> or a fully described <a class="localLink" href="/ImageObject">ImageObject</a>.
-    pub image: Option<Thing>,
+    pub image: Option<image>,
 
     /// Indicates a page (or other CreativeWork) for which this thing is the main entity being described. See <a href="/docs/datamodel.html#mainEntityBackground">background notes</a> for details.
-    pub main_entity_of_page: Option<Thing>,
+    pub main_entity_of_page: Option<mainEntityOfPage>,
 
     /// The name of the item.
-    pub name: Option<Thing>,
+    pub name: Option<Text>,
 
     /// Indicates a potential Action, which describes an idealized action in which this thing would play an 'object' role.
-    pub potential_action: Option<Thing>,
+    pub potential_action: Option<Action>,
 
     /// URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Wikidata entry, or official website.
-    pub same_as: Option<Thing>,
+    pub same_as: Option<URL>,
 
     /// A CreativeWork or Event about this Thing.
-    pub subject_of: Option<Thing>,
+    pub subject_of: Option<subjectOf>,
 
     /// URL of the item.
-    pub url: Option<Thing>,
+    pub url: Option<URL>,
 
     /// The overall rating, based on a collection of reviews or ratings, of the item.
-    pub aggregate_rating: Option<aggregateRating>,
+    pub aggregate_rating: Option<AggregateRating>,
 
     /// The geographic area where a service or offered item is provided.
     pub area_served: Option<areaServed>,
 
     /// An intended audience, i.e. a group for whom something was created.
-    pub audience: Option<audience>,
+    pub audience: Option<Audience>,
 
     /// A means of accessing the service (e.g. a phone bank, a web site, a location, etc.).
-    pub available_channel: Option<Service>,
+    pub available_channel: Option<ServiceChannel>,
 
     /// An award won by or for this item.
-    pub award: Option<award>,
+    pub award: Option<Text>,
 
     /// The brand(s) associated with a product or service, or the brand(s) maintained by an organization or business person.
     pub brand: Option<brand>,
@@ -102,10 +111,10 @@ pub struct DepositAccountOptions {
     pub category: Option<category>,
 
     /// Indicates an OfferCatalog listing for this Organization, Person, or Service.
-    pub has_offer_catalog: Option<hasOfferCatalog>,
+    pub has_offer_catalog: Option<OfferCatalog>,
 
     /// The hours during which this service or contact is available.
-    pub hours_available: Option<hoursAvailable>,
+    pub hours_available: Option<OpeningHoursSpecification>,
 
     /// A pointer to another, somehow related product (or multiple products).
     pub is_related_to: Option<isRelatedTo>,
@@ -123,40 +132,40 @@ pub struct DepositAccountOptions {
     pub provider: Option<provider>,
 
     /// Indicates the mobility of a provided service (e.g. 'static', 'dynamic').
-    pub provider_mobility: Option<Service>,
+    pub provider_mobility: Option<Text>,
 
     /// A review of the item.
-    pub review: Option<review>,
+    pub review: Option<Review>,
 
     /// The tangible thing generated by the service, e.g. a passport, permit, etc.
-    pub service_output: Option<Service>,
+    pub service_output: Option<Thing>,
 
     /// The type of service being offered, e.g. veterans' benefits, emergency relief, etc.
-    pub service_type: Option<Service>,
+    pub service_type: Option<serviceType>,
 
     /// A slogan or motto associated with the item.
-    pub slogan: Option<slogan>,
+    pub slogan: Option<Text>,
 
     /// Human-readable terms of service documentation.
-    pub terms_of_service: Option<Service>,
+    pub terms_of_service: Option<termsOfService>,
 
     /// The annual rate that is charged for borrowing (or made by investing), expressed as a single percentage number that represents the actual yearly cost of funds over the term of a loan. This includes any fees or additional costs associated with the transaction.
-    pub annual_percentage_rate: Option<FinancialProduct>,
+    pub annual_percentage_rate: Option<annualPercentageRate>,
 
     /// Description of fees, commissions, and other terms applied either to a class of financial product, or by a financial service organization.
     pub fees_and_commissions_specification: Option<feesAndCommissionsSpecification>,
 
     /// The interest rate, charged or paid, applicable to the financial product. Note: This is different from the calculated annualPercentageRate.
-    pub interest_rate: Option<FinancialProduct>,
+    pub interest_rate: Option<interestRate>,
 
     /// A minimum amount that has to be paid in every month.
-    pub account_minimum_inflow: Option<BankAccount>,
+    pub account_minimum_inflow: Option<MonetaryAmount>,
 
     /// An overdraft is an extension of credit from a lending institution when an account reaches zero. An overdraft allows the individual to continue withdrawing money even if the account has no funds in it. Basically the bank allows people to borrow a set amount of money.
-    pub account_overdraft_limit: Option<BankAccount>,
+    pub account_overdraft_limit: Option<MonetaryAmount>,
 
     /// The type of a bank account.
-    pub bank_account_type: Option<BankAccount>,
+    pub bank_account_type: Option<bankAccountType>,
 
     /// The amount of money.
     pub amount: Option<amount>,

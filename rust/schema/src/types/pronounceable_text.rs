@@ -2,6 +2,7 @@
 
 use crate::prelude::*;
 
+use super::text::Text;
 use super::in_language::inLanguage;
 
 /// * MOD OF: https://pending.schema.org * COMMENT: Data type: PronounceableText. * EXTEND FROM: https://schema.org/Text
@@ -24,13 +25,13 @@ pub struct PronounceableTextOptions {
     pub in_language: Option<inLanguage>,
 
     /// Representation of a text <a class="localLink" href="/textValue">textValue</a> using the specified <a class="localLink" href="/speechToTextMarkup">speechToTextMarkup</a>. For example the city name of Houston in IPA: /ˈhjuːstən/.
-    pub phonetic_text: Option<PronounceableText>,
+    pub phonetic_text: Option<Text>,
 
     /// Form of markup used. eg. <a href="https://www.w3.org/TR/speech-synthesis11">SSML</a> or <a href="https://www.wikidata.org/wiki/Property:P898">IPA</a>.
-    pub speech_to_text_markup: Option<PronounceableText>,
+    pub speech_to_text_markup: Option<Text>,
 
     /// Text value being annotated.
-    pub text_value: Option<PronounceableText>,
+    pub text_value: Option<Text>,
 }
 
 impl PronounceableText {

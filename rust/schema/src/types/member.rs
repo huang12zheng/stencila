@@ -1,7 +1,7 @@
 use crate::prelude::*;
 
 use super::organization::Organization;
-use super::program_membership::ProgramMembership;
+use super::person::Person;
 
 /// A member of an Organization or a ProgramMembership. Organizations can be members of organizations; ProgramMembership is typically for individuals.
 #[derive(Debug, Clone, PartialEq, Display, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
@@ -9,5 +9,5 @@ use super::program_membership::ProgramMembership;
 
 pub enum member {
     Organization(Organization),
-    ProgramMembership(ProgramMembership),
+    Person(Person),
 }

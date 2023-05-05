@@ -1,15 +1,15 @@
 use crate::prelude::*;
 
-use super::medical_condition::MedicalCondition;
-use super::medical_procedure::MedicalProcedure;
-use super::medical_study::MedicalStudy;
+use super::event_status_type::EventStatusType;
+use super::medical_study_status::MedicalStudyStatus;
+use super::text::Text;
 
 /// The status of the study (enumerated).
 #[derive(Debug, Clone, PartialEq, Display, Serialize, Deserialize, Strip, Read, Write, ToHtml)]
 #[serde(untagged, crate = "common::serde")]
 
 pub enum status {
-    MedicalCondition(MedicalCondition),
-    MedicalProcedure(MedicalProcedure),
-    MedicalStudy(MedicalStudy),
+    EventStatusType(EventStatusType),
+    MedicalStudyStatus(MedicalStudyStatus),
+    Text(Text),
 }

@@ -2,10 +2,23 @@
 
 use crate::prelude::*;
 
+use super::action::Action;
 use super::bio_chem_entity::BioChemEntity;
-use super::thing::Thing;
-use super::funding::funding;
-use super::has_bio_polymer_sequence::hasBioPolymerSequence;
+use super::defined_term::DefinedTerm;
+use super::grant::Grant;
+use super::text::Text;
+use super::url::URL;
+use super::associated_disease::associatedDisease;
+use super::expressed_in::expressedIn;
+use super::has_molecular_function::hasMolecularFunction;
+use super::has_representation::hasRepresentation;
+use super::identifier::identifier;
+use super::image::image;
+use super::is_involved_in_biological_process::isInvolvedInBiologicalProcess;
+use super::is_located_in_subcellular_location::isLocatedInSubcellularLocation;
+use super::main_entity_of_page::mainEntityOfPage;
+use super::subject_of::subjectOf;
+use super::taxonomic_range::taxonomicRange;
 
 /// * MOD OF: https://pending.schema.org * COMMENT: A discrete unit of inheritance which affects one or more biological traits (Source: <a href="https://en.wikipedia.org/wiki/Gene">https://en.wikipedia.org/wiki/Gene</a>). Examples include FOXP2 (Forkhead box protein P2), SCARNA21 (small Cajal body-specific RNA 21), A- (agouti genotype). * EXTEND FROM: https://schema.org/BioChemEntity
 #[skip_serializing_none]
@@ -24,43 +37,43 @@ pub struct Gene {
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct GeneOptions {
     /// An additional type for the item, typically used for adding more specific types from external vocabularies in microdata syntax. This is a relationship between something and a class that the thing is in. In RDFa syntax, it is better to use the native RDFa syntax - the 'typeof' attribute - for multiple types. Schema.org tools may have only weaker understanding of extra types, in particular those defined externally.
-    pub additional_type: Option<Thing>,
+    pub additional_type: Option<URL>,
 
     /// An alias for the item.
-    pub alternate_name: Option<Thing>,
+    pub alternate_name: Option<Text>,
 
     /// A description of the item.
-    pub description: Option<Thing>,
+    pub description: Option<Text>,
 
     /// A sub property of description. A short description of the item used to disambiguate from other, similar items. Information from other properties (in particular, name) may be necessary for the description to be useful for disambiguation.
-    pub disambiguating_description: Option<Thing>,
+    pub disambiguating_description: Option<Text>,
 
     /// The identifier property represents any kind of identifier for any kind of <a class="localLink" href="/Thing">Thing</a>, such as ISBNs, GTIN codes, UUIDs etc. Schema.org provides dedicated properties for representing many of these, either as textual strings or as URL (URI) links. See <a href="/docs/datamodel.html#identifierBg">background notes</a> for more details.
-    pub identifier: Option<Thing>,
+    pub identifier: Option<identifier>,
 
     /// An image of the item. This can be a <a class="localLink" href="/URL">URL</a> or a fully described <a class="localLink" href="/ImageObject">ImageObject</a>.
-    pub image: Option<Thing>,
+    pub image: Option<image>,
 
     /// Indicates a page (or other CreativeWork) for which this thing is the main entity being described. See <a href="/docs/datamodel.html#mainEntityBackground">background notes</a> for details.
-    pub main_entity_of_page: Option<Thing>,
+    pub main_entity_of_page: Option<mainEntityOfPage>,
 
     /// The name of the item.
-    pub name: Option<Thing>,
+    pub name: Option<Text>,
 
     /// Indicates a potential Action, which describes an idealized action in which this thing would play an 'object' role.
-    pub potential_action: Option<Thing>,
+    pub potential_action: Option<Action>,
 
     /// URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Wikidata entry, or official website.
-    pub same_as: Option<Thing>,
+    pub same_as: Option<URL>,
 
     /// A CreativeWork or Event about this Thing.
-    pub subject_of: Option<Thing>,
+    pub subject_of: Option<subjectOf>,
 
     /// URL of the item.
-    pub url: Option<Thing>,
+    pub url: Option<URL>,
 
     /// Disease associated to this BioChemEntity. Such disease can be a MedicalCondition or a URL. If you want to add an evidence supporting the association, please use PropertyValue.
-    pub associated_disease: Option<BioChemEntity>,
+    pub associated_disease: Option<associatedDisease>,
 
     /// A BioChemEntity that is known to interact with this item.
     pub bio_chem_interaction: Option<BioChemEntity>,
@@ -69,46 +82,46 @@ pub struct GeneOptions {
     pub bio_chem_similarity: Option<BioChemEntity>,
 
     /// A role played by the BioChemEntity within a biological context.
-    pub biological_role: Option<BioChemEntity>,
+    pub biological_role: Option<DefinedTerm>,
 
     /// A <a class="localLink" href="/Grant">Grant</a> that directly or indirectly provide funding or sponsorship for this item. See also <a class="localLink" href="/ownershipFundingInfo">ownershipFundingInfo</a>.
-    pub funding: Option<funding>,
+    pub funding: Option<Grant>,
 
     /// Indicates a BioChemEntity that (in some sense) has this BioChemEntity as a part.
     pub has_bio_chem_entity_part: Option<BioChemEntity>,
 
     /// Molecular function performed by this BioChemEntity; please use PropertyValue if you want to include any evidence.
-    pub has_molecular_function: Option<BioChemEntity>,
+    pub has_molecular_function: Option<hasMolecularFunction>,
 
     /// A common representation such as a protein sequence or chemical structure for this entity. For images use schema.org/image.
-    pub has_representation: Option<BioChemEntity>,
+    pub has_representation: Option<hasRepresentation>,
 
     /// Another BioChemEntity encoding by this one.
-    pub is_encoded_by_bio_chem_entity: Option<BioChemEntity>,
+    pub is_encoded_by_bio_chem_entity: Option<Gene>,
 
     /// Biological process this BioChemEntity is involved in; please use PropertyValue if you want to include any evidence.
-    pub is_involved_in_biological_process: Option<BioChemEntity>,
+    pub is_involved_in_biological_process: Option<isInvolvedInBiologicalProcess>,
 
     /// Subcellular location where this BioChemEntity is located; please use PropertyValue if you want to include any evidence.
-    pub is_located_in_subcellular_location: Option<BioChemEntity>,
+    pub is_located_in_subcellular_location: Option<isLocatedInSubcellularLocation>,
 
     /// Indicates a BioChemEntity that is (in some sense) a part of this BioChemEntity.
     pub is_part_of_bio_chem_entity: Option<BioChemEntity>,
 
     /// The taxonomic grouping of the organism that expresses, encodes, or in some way related to the BioChemEntity.
-    pub taxonomic_range: Option<BioChemEntity>,
+    pub taxonomic_range: Option<taxonomicRange>,
 
     /// Another gene which is a variation of this one.
     pub alternative_of: Option<Gene>,
 
     /// Another BioChemEntity encoded by this one.
-    pub encodes_bio_chem_entity: Option<Gene>,
+    pub encodes_bio_chem_entity: Option<BioChemEntity>,
 
     /// Tissue, organ, biological sample, etc in which activity of this gene has been observed experimentally. For example brain, digestive system.
-    pub expressed_in: Option<Gene>,
+    pub expressed_in: Option<expressedIn>,
 
     /// A symbolic representation of a BioChemEntity. For example, a nucleotide sequence of a Gene or an amino acid sequence of a Protein.
-    pub has_bio_polymer_sequence: Option<hasBioPolymerSequence>,
+    pub has_bio_polymer_sequence: Option<Text>,
 }
 
 impl Gene {

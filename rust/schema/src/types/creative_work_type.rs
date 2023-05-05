@@ -1,6 +1,5 @@
 use crate::prelude::*;
 
-use super::3d_model::3DModel;
 use super::api_reference::APIReference;
 use super::about_page::AboutPage;
 use super::advertiser_content_article::AdvertiserContentArticle;
@@ -88,6 +87,7 @@ use super::menu::Menu;
 use super::menu_section::MenuSection;
 use super::message::Message;
 use super::mobile_application::MobileApplication;
+use super::model_3d::Model3D;
 use super::movie::Movie;
 use super::movie_clip::MovieClip;
 use super::movie_series::MovieSeries;
@@ -173,7 +173,6 @@ use super::web_site::WebSite;
 #[serde(untagged, crate = "common::serde")]
 
 pub enum CreativeWorkType {
-    3DModel(3DModel),
     APIReference(APIReference),
     AboutPage(AboutPage),
     AdvertiserContentArticle(AdvertiserContentArticle),
@@ -261,6 +260,7 @@ pub enum CreativeWorkType {
     MenuSection(MenuSection),
     Message(Message),
     MobileApplication(MobileApplication),
+    Model3D(Model3D),
     Movie(Movie),
     MovieClip(MovieClip),
     MovieSeries(MovieSeries),

@@ -1,9 +1,5 @@
 use crate::prelude::*;
 
-use super::creative_work::CreativeWork;
-use super::event::Event;
-use super::grant::Grant;
-use super::medical_study::MedicalStudy;
 use super::organization::Organization;
 use super::person::Person;
 
@@ -12,10 +8,6 @@ use super::person::Person;
 #[serde(untagged, crate = "common::serde")]
 
 pub enum sponsor {
-    CreativeWork(CreativeWork),
-    Event(Event),
-    Grant(Grant),
-    MedicalStudy(MedicalStudy),
     Organization(Organization),
     Person(Person),
 }

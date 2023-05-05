@@ -1,6 +1,5 @@
 use crate::prelude::*;
 
-use super::3d_model::3DModel;
 use super::am_radio_channel::AMRadioChannel;
 use super::api_reference::APIReference;
 use super::abdomen::Abdomen;
@@ -693,6 +692,7 @@ use super::mixtape_album::MixtapeAlbum;
 use super::mobile_application::MobileApplication;
 use super::mobile_phone_store::MobilePhoneStore;
 use super::mobile_web_platform::MobileWebPlatform;
+use super::model_3d::Model3D;
 use super::molecular_entity::MolecularEntity;
 use super::monday::Monday;
 use super::monetary_amount::MonetaryAmount;
@@ -1359,7 +1359,6 @@ pub enum Node {
     Number(Number),
     String(String),
     Array(Array),
-    3DModel(3DModel),
     AMRadioChannel(AMRadioChannel),
     APIReference(APIReference),
     Abdomen(Abdomen),
@@ -2049,6 +2048,7 @@ pub enum Node {
     MobileApplication(MobileApplication),
     MobilePhoneStore(MobilePhoneStore),
     MobileWebPlatform(MobileWebPlatform),
+    Model3D(Model3D),
     MolecularEntity(MolecularEntity),
     Monday(Monday),
     MonetaryAmount(MonetaryAmount),

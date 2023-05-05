@@ -2,12 +2,24 @@
 
 use crate::prelude::*;
 
-use super::medical_entity::MedicalEntity;
-use super::thing::Thing;
-use super::active_ingredient::activeIngredient;
-use super::funding::funding;
+use super::action::Action;
+use super::administrative_area::AdministrativeArea;
+use super::grant::Grant;
+use super::maximum_dose_schedule::MaximumDoseSchedule;
+use super::medical_code::MedicalCode;
+use super::medical_guideline::MedicalGuideline;
+use super::medical_specialty::MedicalSpecialty;
+use super::medical_study::MedicalStudy;
+use super::medicine_system::MedicineSystem;
+use super::number::Number;
+use super::organization::Organization;
+use super::text::Text;
+use super::url::URL;
+use super::identifier::identifier;
+use super::image::image;
 use super::legal_status::legalStatus;
-use super::maximum_intake::maximumIntake;
+use super::main_entity_of_page::mainEntityOfPage;
+use super::subject_of::subjectOf;
 
 /// * COMMENT: A specific strength in which a medical drug is available in a specific country. * EXTEND FROM: https://schema.org/MedicalIntangible
 #[skip_serializing_none]
@@ -26,79 +38,79 @@ pub struct DrugStrength {
 #[serde(rename_all = "camelCase", crate = "common::serde")]
 pub struct DrugStrengthOptions {
     /// An additional type for the item, typically used for adding more specific types from external vocabularies in microdata syntax. This is a relationship between something and a class that the thing is in. In RDFa syntax, it is better to use the native RDFa syntax - the 'typeof' attribute - for multiple types. Schema.org tools may have only weaker understanding of extra types, in particular those defined externally.
-    pub additional_type: Option<Thing>,
+    pub additional_type: Option<URL>,
 
     /// An alias for the item.
-    pub alternate_name: Option<Thing>,
+    pub alternate_name: Option<Text>,
 
     /// A description of the item.
-    pub description: Option<Thing>,
+    pub description: Option<Text>,
 
     /// A sub property of description. A short description of the item used to disambiguate from other, similar items. Information from other properties (in particular, name) may be necessary for the description to be useful for disambiguation.
-    pub disambiguating_description: Option<Thing>,
+    pub disambiguating_description: Option<Text>,
 
     /// The identifier property represents any kind of identifier for any kind of <a class="localLink" href="/Thing">Thing</a>, such as ISBNs, GTIN codes, UUIDs etc. Schema.org provides dedicated properties for representing many of these, either as textual strings or as URL (URI) links. See <a href="/docs/datamodel.html#identifierBg">background notes</a> for more details.
-    pub identifier: Option<Thing>,
+    pub identifier: Option<identifier>,
 
     /// An image of the item. This can be a <a class="localLink" href="/URL">URL</a> or a fully described <a class="localLink" href="/ImageObject">ImageObject</a>.
-    pub image: Option<Thing>,
+    pub image: Option<image>,
 
     /// Indicates a page (or other CreativeWork) for which this thing is the main entity being described. See <a href="/docs/datamodel.html#mainEntityBackground">background notes</a> for details.
-    pub main_entity_of_page: Option<Thing>,
+    pub main_entity_of_page: Option<mainEntityOfPage>,
 
     /// The name of the item.
-    pub name: Option<Thing>,
+    pub name: Option<Text>,
 
     /// Indicates a potential Action, which describes an idealized action in which this thing would play an 'object' role.
-    pub potential_action: Option<Thing>,
+    pub potential_action: Option<Action>,
 
     /// URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Wikidata entry, or official website.
-    pub same_as: Option<Thing>,
+    pub same_as: Option<URL>,
 
     /// A CreativeWork or Event about this Thing.
-    pub subject_of: Option<Thing>,
+    pub subject_of: Option<subjectOf>,
 
     /// URL of the item.
-    pub url: Option<Thing>,
+    pub url: Option<URL>,
 
     /// A medical code for the entity, taken from a controlled vocabulary or ontology such as ICD-9, DiseasesDB, MeSH, SNOMED-CT, RxNorm, etc.
-    pub code: Option<MedicalEntity>,
+    pub code: Option<MedicalCode>,
 
     /// A <a class="localLink" href="/Grant">Grant</a> that directly or indirectly provide funding or sponsorship for this item. See also <a class="localLink" href="/ownershipFundingInfo">ownershipFundingInfo</a>.
-    pub funding: Option<funding>,
+    pub funding: Option<Grant>,
 
     /// A medical guideline related to this entity.
-    pub guideline: Option<MedicalEntity>,
+    pub guideline: Option<MedicalGuideline>,
 
     /// The drug or supplement's legal status, including any controlled substance schedules that apply.
     pub legal_status: Option<legalStatus>,
 
     /// The system of medicine that includes this MedicalEntity, for example 'evidence-based', 'homeopathic', 'chiropractic', etc.
-    pub medicine_system: Option<MedicalEntity>,
+    pub medicine_system: Option<MedicineSystem>,
 
     /// If applicable, the organization that officially recognizes this entity as part of its endorsed system of medicine.
-    pub recognizing_authority: Option<MedicalEntity>,
+    pub recognizing_authority: Option<Organization>,
 
     /// If applicable, a medical specialty in which this entity is relevant.
-    pub relevant_specialty: Option<MedicalEntity>,
+    pub relevant_specialty: Option<MedicalSpecialty>,
 
     /// A medical study or trial related to this entity.
-    pub study: Option<MedicalEntity>,
+    pub study: Option<MedicalStudy>,
 
     /// An active ingredient, typically chemical compounds and/or biologic substances.
-    pub active_ingredient: Option<activeIngredient>,
+    pub active_ingredient: Option<Text>,
 
     /// The location in which the strength is available.
-    pub available_in: Option<DrugStrength>,
+    pub available_in: Option<AdministrativeArea>,
 
     /// Recommended intake of this supplement for a given population as defined by a specific recommending authority.
-    pub maximum_intake: Option<maximumIntake>,
+    pub maximum_intake: Option<MaximumDoseSchedule>,
 
     /// The units of an active ingredient's strength, e.g. mg.
-    pub strength_unit: Option<DrugStrength>,
+    pub strength_unit: Option<Text>,
 
     /// The value of an active ingredient's strength, e.g. 325.
-    pub strength_value: Option<DrugStrength>,
+    pub strength_value: Option<Number>,
 }
 
 impl DrugStrength {

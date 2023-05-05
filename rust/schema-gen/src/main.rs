@@ -30,25 +30,26 @@ async fn main() -> Result<()> {
     let args = Args::parse();
 
     let mut schemas = Schemas::read().await?;
-    schemas.check()?;
-    schemas.extend()?;
-    schemas.expand()?;
+    insta::assert_debug_snapshot!(schemas.schemas.get_index(0));
+    // schemas.check()?;
+    // schemas.extend()?;
+    // schemas.expand()?;
 
-    if args.docs {
-        schemas.docs().await?;
-    }
+    // if args.docs {
+    //     schemas.docs().await?;
+    // }
 
-    if args.json_ld {
-        schemas.json_ld().await?;
-    }
+    // if args.json_ld {
+    //     schemas.json_ld().await?;
+    // }
 
-    if args.json_schema {
-        schemas.json_schema().await?;
-    }
+    // if args.json_schema {
+    //     schemas.json_schema().await?;
+    // }
 
-    if args.rust {
-        schemas.rust().await?;
-    }
+    // if args.rust {
+    //     schemas.rust().await?;
+    // }
 
     Ok(())
 }

@@ -145,7 +145,7 @@ pub struct EpisodeOptions {
     pub about: Option<Thing>,
 
     /// An abstract is a short description that summarizes a <a class="localLink" href="/CreativeWork">CreativeWork</a>.
-    pub abstract: Option<Text>,
+    pub r_abstract: Option<Text>,
 
     /// The human sensory perceptual system or cognitive faculty through which a person may process or perceive information. Values should be drawn from the <a href="https://www.w3.org/2021/a11y-discov-vocab/latest/#accessMode-vocabulary">approved vocabulary</a>.
     pub access_mode: Option<Text>,

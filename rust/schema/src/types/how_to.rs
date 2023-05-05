@@ -87,7 +87,7 @@ use super::translator::translator;
 use super::usage_info::usageInfo;
 use super::version::version;
 use super::video::video;
-use super::yield::yield;
+use super::yield_e::yield_e;
 
 /// * COMMENT: Instructions that explain how to achieve a result by performing a sequence of steps. * EXTEND FROM: https://schema.org/CreativeWork * LOOK ALSO: https://schema.org/Recipe
 #[skip_serializing_none]
@@ -145,7 +145,7 @@ pub struct HowToOptions {
     pub about: Option<Thing>,
 
     /// An abstract is a short description that summarizes a <a class="localLink" href="/CreativeWork">CreativeWork</a>.
-    pub r_abstract: Option<Text>,
+    pub abstract_e: Option<Text>,
 
     /// The human sensory perceptual system or cognitive faculty through which a person may process or perceive information. Values should be drawn from the <a href="https://www.w3.org/2021/a11y-discov-vocab/latest/#accessMode-vocabulary">approved vocabulary</a>.
     pub access_mode: Option<Text>,
@@ -484,7 +484,7 @@ pub struct HowToOptions {
     pub total_time: Option<Duration>,
 
     /// The quantity that results by performing instructions. For example, a paper airplane, 10 personalized candles.
-    pub yield: Option<yield>,
+    pub yield_e: Option<yield_e>,
 }
 
 impl HowTo {

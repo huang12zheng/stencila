@@ -1749,7 +1749,7 @@ mod write_action;
 mod write_permission;
 mod x_path_type;
 mod x_ray;
-mod yield;
+mod yield_e;
 mod zone_boarding_policy;
 mod zoo;
 
@@ -3502,6 +3502,6 @@ pub use write_action::*;
 pub use write_permission::*;
 pub use x_path_type::*;
 pub use x_ray::*;
-pub use yield::*;
+pub use yield_e::*;
 pub use zone_boarding_policy::*;
 pub use zoo::*;

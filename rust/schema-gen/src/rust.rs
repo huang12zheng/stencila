@@ -253,6 +253,9 @@ impl Schemas {
                 default
             });
 
+            // Set the dependency for intoem
+            used_types.extend(schema.extends.clone().unwrap_or(vec![]));
+
             // Wrap type and defaults in generic types as necessary
 
             if is_vec {
@@ -382,10 +385,46 @@ pub struct {title}Options {{
             String::new()
         };
 
-        let implem = format!(
-            r#"
-impl {title} {{{new}}}"#,
-        );
+        let implem = format!(r#"impl {title} {{{new}}}"#);
+
+        let intoem = if let Some(ref parents) = schema.extends {
+            if parents.is_empty() {
+                "".to_string()
+            } else {
+                let (into_items, impl_items): (Vec<_>, Vec<_>) = parents
+                    .iter()
+                    .map(|parent| {
+                        let into_item = format!(
+                            r#"
+impl Into<{parent}> for {title} {{
+    fn into(self) -> {parent} {{
+        serde_json::from_value(serde_json::to_value(self).unwrap()).unwrap()
+    }}
+}}"#
+                        );
+                        let impl_item: String = format!(
+                            r#"
+    pub fn into_{}(self) -> {} {{
+        self.into()
+    }}"#,
+                            parent.to_snake_case(),
+                            parent,
+                        );
+                        (into_item, impl_item)
+                    })
+                    .unzip();
+                let (into_items, impl_items) = (into_items.join("\n"), impl_items.join("\n"));
+                // .join("\n");
+                format!(
+                    r#"
+{into_items}
+impl {title} {{{impl_items}
+}}"#
+                )
+            }
+        } else {
+            "".to_string()
+        };
 
         let rust = format!(
             r#"use crate::prelude::*;
@@ -400,6 +439,7 @@ pub struct {title} {{
     {core_fields}
 }}{options}
 {implem}
+{intoem}
 "#
         );
         Ok(rust)

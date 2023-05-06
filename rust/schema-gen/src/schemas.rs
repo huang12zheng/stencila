@@ -389,66 +389,63 @@ impl Schemas {
         //     ..Default::default()
         // });
 
-        // let title = "Node".to_string();
-        // self.schemas.insert(
-        //     title.clone(),
-        //     Schema {
-        //         title: Some(title),
-        //         description: Some(
-        //             "Union type for all types in this schema, including primitives and entities"
-        //                 .to_string(),
-        //         ),
-        //         any_of: Some(any_of),
-        //         ..Default::default()
-        //     },
-        // );
+        let title = "Node".to_string();
+        self.schemas.insert(
+            title.clone(),
+            Schema {
+                title: Some(title),
+                description: Some("Union type for all types in this schema".to_string()),
+                any_of: Some(any_of),
+                ..Default::default()
+            },
+        );
 
         // Union types for descendants of...
-        // for base in ["Thing", "CreativeWork"] {
-        //     let mut any_of = Vec::new();
-        //     for (name, schema) in &self.schemas {
-        //         fn is_descendent(
-        //             schemas: &IndexMap<String, Schema>,
-        //             base: &str,
-        //             nest: &Schema,
-        //         ) -> bool {
-        //             if nest
-        //                 .extends
-        //                 .as_ref()
-        //                 .unwrap_or(&vec![])
-        //                 .contains(&base.to_string())
-        //             {
-        //                 return true;
-        //             }
-        //             nest.extends
-        //                 .as_ref()
-        //                 .unwrap_or(&vec![])
-        //                 .iter()
-        //                 .any(|extend| is_descendent(schemas, base, &schemas[extend]))
-        //         }
+        for base in ["Thing", "CreativeWork"] {
+            let mut any_of = Vec::new();
+            for (name, schema) in &self.schemas {
+                fn is_descendent(
+                    schemas: &IndexMap<String, Schema>,
+                    base: &str,
+                    nest: &Schema,
+                ) -> bool {
+                    if nest
+                        .extends
+                        .as_ref()
+                        .unwrap_or(&vec![])
+                        .contains(&base.to_string())
+                    {
+                        return true;
+                    }
+                    nest.extends
+                        .as_ref()
+                        .unwrap_or(&vec![])
+                        .iter()
+                        .any(|extend| is_descendent(schemas, base, &schemas[extend]))
+                }
 
-        //         if is_descendent(&self.schemas, base, schema) {
-        //             any_of.push(Schema {
-        //                 r#ref: Some(name.to_string()),
-        //                 ..Default::default()
-        //             });
-        //         }
-        //     }
-        //     any_of.sort_by(|a, b| a.r#ref.cmp(&b.r#ref));
+                if is_descendent(&self.schemas, base, schema) {
+                    any_of.push(Schema {
+                        r#ref: Some(name.to_string()),
+                        ..Default::default()
+                    });
+                }
+            }
+            any_of.sort_by(|a, b| a.r#ref.cmp(&b.r#ref));
 
-        //     let title = format!("{base}Type");
-        //     self.schemas.insert(
-        //         title.clone(),
-        //         Schema {
-        //             title: Some(title),
-        //             description: Some(format!(
-        //                 "Union type for all types that are descended from `{base}`"
-        //             )),
-        //             any_of: Some(any_of),
-        //             ..Default::default()
-        //         },
-        //     );
-        // }
+            let title = format!("{base}Type");
+            self.schemas.insert(
+                title.clone(),
+                Schema {
+                    title: Some(title),
+                    description: Some(format!(
+                        "Union type for all types that are descended from `{base}`"
+                    )),
+                    any_of: Some(any_of),
+                    ..Default::default()
+                },
+            );
+        }
 
         Ok(())
     }

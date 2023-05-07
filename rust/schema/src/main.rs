@@ -23,10 +23,10 @@ pub fn main() {
     // println!("{}", serde_json::json!(dentist));
     let a = json!(dentist);
     // a.as_object_mut().unwrap().extend(iter)
-
-    extend(
+    schema::Dentist::extend(
+        // extend(
         &mut dentist,
-        vec![Thing {
+        vec![LocalBusiness {
             ..Default::default()
         }],
     )
@@ -46,58 +46,4 @@ pub fn main() {
     // println!("{local:?}");
     // let local: MedicalOrganization = dentist.clone().into();
     // println!("{local:?}");
-}
-
-fn object<T>(value: &T) -> Map<String, Value>
-where
-    T: Serialize,
-{
-    serde_json::from_value(json!(value)).unwrap_or_else(|_| unreachable!())
-}
-
-pub fn extend<T, I>(origin: &mut T, values: I) -> Result<()>
-where
-    T: Serialize + for<'de> common::serde::Deserialize<'de> + TypeGroup,
-    I: IntoIterator,
-    I::Item: Serialize,
-{
-    let origin_map = object(origin);
-    let value_maps: Vec<(String, Map<String, Value>)> = values
-        .into_iter()
-        .map(|value| (T::check_type(&value), object(&value)))
-        .collect();
-
-    // 1. Check keys
-    let mut origin_keys: HashSet<_> = origin_map.keys().collect();
-
-    let err_output: Vec<String> = value_maps
-        .iter()
-        .filter_map(|(type_name, value)| {
-            let value_keys: HashSet<_> = value.keys().collect();
-            let duplicate_keys = origin_keys
-                .intersection(&value_keys)
-                .collect::<HashSet<_>>();
-
-            let result = if !duplicate_keys.is_empty() {
-                // Duplicate keys found:
-
-                Some(format!("{type_name} with {:?}", duplicate_keys))
-            } else {
-                None
-            };
-            origin_keys.extend(value_keys);
-            result
-        })
-        .collect();
-
-    if !err_output.is_empty() {
-        common::eyre::bail!("Duplicate keys found: {:?}", err_output);
-    }
-
-    // 2. Merge values
-    let mut origin_map = origin_map;
-    origin_map.extend(value_maps.into_iter().flat_map(|(_, m)| m.into_iter()));
-
-    *origin = serde_json::from_value(Value::Object(origin_map))?;
-    Ok(())
 }
